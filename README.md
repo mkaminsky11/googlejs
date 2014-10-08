@@ -67,6 +67,7 @@ The other way creates a popup that authorizes the user.
 googlejs.login(false, function(){
 	
 },"");
+```
 
 ###Getting User Info###
 Knowing information such as the email and storage space of a user is important. The `googlejs.getInfo()` method will return this information as an object.
