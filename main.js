@@ -2,6 +2,8 @@ function loadDrive(){
 	console.log("hi");
 	
 	googlejs.clientId = '953350323460-0i28dhkj1hljs8m9ggvm3fbiv79cude6.apps.googleusercontent.com';
+	googlejs.appId = '953350323460';
+	googlejs.developerKey = 'AIzaSyBTSFIgQkLly9v6Xuqc2Nqm-vX0jpyEbZk';
 	
 	googlejs.isLoggedIn(function(res,err){
 		if(res === false){
@@ -17,7 +19,10 @@ function loadDrive(){
 		}
 		else{
 			googlejs.loadDrive(function(){
-				googlejs.getInfo(function(res){
+				/*googlejs.getInfo(function(res){
+					console.log(res);
+				});*/
+				googlejs.getTitle("0ByWSHHBN-zyoRVN6UVlkYlp2dGM",function(res){
 					console.log(res);
 				});
 			});
