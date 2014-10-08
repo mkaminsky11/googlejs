@@ -4,6 +4,9 @@ Google APIs made easy
 
 **Todo**
 + Google Drive
+  + log in (done)
+  + log out (done)
+  + check if logged in (done)
   + open file dialog
   + share dialog
   + get contents
@@ -16,4 +19,4 @@ Google APIs made easy
   + get collaborators
   + 
 + info
-  + get user info
+  + get user info (done)
