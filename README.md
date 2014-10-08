@@ -33,7 +33,7 @@ function loadDrive(){
 ###Things to Know###
 Each Google Drive file, folder, and user has a unique id. You can find the id of a file or folder by using the `pickFile()` or `pickerFolder()` methods. These will return an object, which can be parsed for the id.
 
-Each user also has a root folder (the highest level folder in your Google Drive file tree). This is stored under `googlejs.rootFolderId` once the `loadDrive()` method is called and executed.
+Each user also has a root folder (the highest level folder in your Google Drive file tree). This is stored under `googlejs.rootFolderId` once the `googlejs.loadDrive()` method is called and executed.
 
 ###Checking Login Status###
 One thing that you might want to do is to check if the user is already logged in.
@@ -51,9 +51,30 @@ function loadDrive(){
 			//not yet logged in, need to be authorized
 		}
 	});
-	
-	
 }
+```
+
+###Logging User In###
+There are two ways to log the user in. One is to redirect the user to a specific url, which then redirects the user again, once the authorization is complete to another (`redirect_url`). This url must be specified in the Google Developer console's "credidentials" section.
+
+```javascript
+googlejs.login(true, function(){
+	//the user will be redirected via window.location.href
+},"https://example/blahblahblah");
+
+The other way creates a popup that authorizes the user.
+
+googlejs.login(false, function(){
+	
+},"");
+
+###Getting User Info###
+Knowing information such as the email and storage space of a user is important. The `googlejs.getInfo()` method will return this information as an object.
+
+```javascript
+googlejs.getInfo(function(res){
+	console.log(res);
+});
 ```
 
 **Todo**
