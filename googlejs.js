@@ -301,5 +301,171 @@ var googlejs = {
 	  request.execute(function(resp) {
 	  	callback();
 	  });
+	},
+	
+	refreshToken: function(){
+		gapi.auth.authorize({'client_id': googlejs.clientId, 'scope': googlejs.scopes.join(' '), 'immediate':true},function(result){});
+	},
+	
+	getParents: function(file, callback) {
+	  var request = gapi.client.drive.parents.list({
+	    'fileId': file
+	  });
+	  request.execute(function(resp) {
+	    callback(resp);
+	  });
+	},
+	
+	getFile: function(file, callback){
+		var request = gapi.client.drive.files.get({
+		   'fileId': file
+		});
+		request.execute(function(resp) {
+		  callback(resp);
+		});
+	},
+	
+	getAllFiles: function(callback) {
+	  var retrievePageOfFiles = function(request, result) {
+	    request.execute(function(resp) {
+	      result = result.concat(resp.items);
+	      var nextPageToken = resp.nextPageToken;
+	      if (nextPageToken) {
+	        request = gapi.client.drive.files.list({
+	          'pageToken': nextPageToken
+	        });
+	        retrievePageOfFiles(request, result);
+	      } else {
+	        callback(result);
+	      }
+	    });
+	  }
+	  var initialRequest = gapi.client.drive.files.list();
+	  retrievePageOfFiles(initialRequest, []);
+	},
+	
+	getFileInFolder: function(folderId, callback) {
+	  var retrievePageOfChildren = function(request, result) {
+	    request.execute(function(resp) {
+	      result = result.concat(resp.items);
+	      var nextPageToken = resp.nextPageToken;
+	      if (nextPageToken) {
+	        request = gapi.client.drive.children.list({
+	          'folderId' : folderId,
+	          'pageToken': nextPageToken
+	        });
+	        retrievePageOfChildren(request, result);
+	      } else {
+	        callback(result, folderId);
+	      }
+	    });
+	  }
+	  var initialRequest = gapi.client.drive.children.list({
+	      'folderId' : folderId
+	    });
+	  retrievePageOfChildren(initialRequest, []);
+	},
+	
+	insertFileIntoFolder: function(folderId, fileId) {
+	  var body = {'id': folderId};
+	  var request = gapi.client.drive.parents.insert({
+	    'fileId': fileId,
+	    'resource': body
+	  });
+	  request.execute(function(resp) { });
+	},
+	
+	removeFileFromFolder: function(folderId, fileId) {
+	  var request = gapi.client.drive.parents.delete({
+	    'parentId': folderId,
+	    'fileId': fileId
+	  });
+	  request.execute(function(resp) { });
+	},
+	
+	fileIntoFolder: function(folderId, fileId, callback) {
+	  var body = {'id': folderId};
+	  var request = gapi.client.drive.parents.insert({
+	    'fileId': fileId,
+	    'resource': body
+	  });
+	  request.execute(function(resp) { 
+		  callback(resp);
+	  });
+	},
+	
+	fileFromFolder: function(folderId, fileId, callback) {
+	  var request = gapi.client.drive.parents.delete({
+	    'parentId': folderId,
+	    'fileId': fileId
+	  });
+	  request.execute(function(resp) { 
+		  callbakc(resp);
+	  });
+	},
+	
+	insertFile: function(folderId, title, callback){
+		var content = ""; //default text
+		
+		var contentArray = new Array(content.length); //convert it!
+	    for (var i = 0; i < contentArray.length; i++) {
+	    	contentArray[i] = content.charCodeAt(i);
+	    }
+	    var byteArray = new Uint8Array(contentArray);
+	    var blob = new Blob([byteArray], {type: 'text/plain'}); //this is the only way I could get this to work
+	    
+	    var fileData = blob;
+	    
+	    
+	    
+		const boundary = '-------314159265358979323846';
+		const delimiter = "\r\n--" + boundary + "\r\n";
+		const close_delim = "\r\n--" + boundary + "--";
+	
+		var reader = new FileReader();
+		reader.readAsBinaryString(fileData);
+		reader.onload = function(e) {
+		    var contentType = fileData.type || 'application/octet-stream';
+			var metadata = {
+				'title': title,
+				'mimeType': contentType
+			};
+	
+	    var base64Data = btoa(reader.result);
+	    var multipartRequestBody =
+	        delimiter +
+	        'Content-Type: application/json\r\n\r\n' +
+	        JSON.stringify(metadata) +
+	        delimiter +
+	        'Content-Type: ' + contentType + '\r\n' +
+	        'Content-Transfer-Encoding: base64\r\n' +
+	        '\r\n' +
+	        base64Data +
+	        close_delim;
+	
+	    var request = gapi.client.request({
+	        'path': '/upload/drive/v2/files',
+	        'method': 'POST',
+	        'params': {'uploadType': 'multipart'},
+	        'headers': {
+	          'Content-Type': 'multipart/mixed; boundary="' + boundary + '"'
+	        },
+	        'body': multipartRequestBody});
+	    if (!callback) {
+	      callback = function(file) {
+	      };
+	    }
+	    request.execute(function(d){
+	    	if(folderId !== googlejs.rootFolderId){	
+				googlejs.insertFileIntoFolder(folderId, d.id);
+				googlejs.removeFileFromFolder(d.parents[0].id,d.id);
+			}
+			
+			callback(d);
+	    });
+	  }
+	  
+	  
 	}
+
 };

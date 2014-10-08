@@ -19,10 +19,11 @@ function loadDrive(){
 		}
 		else{
 			googlejs.loadDrive(function(){
-				/*googlejs.getInfo(function(res){
+				googlejs.getInfo(function(res){
 					console.log(res);
-				});*/
-				googlejs.getTitle("0ByWSHHBN-zyoRVN6UVlkYlp2dGM",function(res){
+				});
+				
+				googlejs.pickFolder(function(res){
 					console.log(res);
 				});
 			});

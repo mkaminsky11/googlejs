@@ -30,6 +30,11 @@ function loadDrive(){
 }
 ```
 
+###Things to Know###
+Each Google Drive file, folder, and user has a unique id. You can find the id of a file or folder by using the `pickFile()` or `pickerFolder()` methods. These will return an object, which can be parsed for the id.
+
+Each user also has a root folder (the highest level folder in your Google Drive file tree). This is stored under `googlejs.rootFolderId` once the `loadDrive()` method is called and executed.
+
 ###Checking Login Status###
 One thing that you might want to do is to check if the user is already logged in.
 
@@ -52,7 +57,7 @@ function loadDrive(){
 ```
 
 **Todo**
-+ token refresh
++ token refresh (done)
 + Google Drive
   + log in (done)
   + log out (done)
@@ -66,11 +71,14 @@ function loadDrive(){
   + make changes (done)
   + get title (done)
   + rename (done)
-  + new file
+  + get file metadata (done)
+  + new file (done)
+  + add file to folder (done)
+  + remove file from folder (done)
   + get stuff
-  	+ parents
-  	+ all files
-  	+ files in folder
+  	+ parents  (done)
+  	+ all files (done)
+  	+ files in folder (done)
 + Google Realtime
   + detect changes
   + make changes
