@@ -71,7 +71,16 @@ googlejs.login(false, function(){
 },"");
 ```
 
+###Loading Drive###
+```javascript
+googlejs.loadDrive(function(){
+	
+});
+```
+
 ###Getting User Info###
+<b>Before you can get user information, you must load Google Drive (see above)</b>
+
 Knowing information such as the email and storage space of a user is important. The `googlejs.getInfo()` method will return this information as an object.
 
 ```javascript
