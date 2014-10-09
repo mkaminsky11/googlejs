@@ -13,6 +13,7 @@ var googlejs = {
 	fileId :"",
 	appId: "",
 	developerKey: "",
+	load: false,
 	
 	isLoggedIn: function(callback){
 		gapi.auth.authorize({'client_id': googlejs.clientId, 'scope': googlejs.scopes.join(' '), 'immediate': true},function(result){
@@ -41,7 +42,7 @@ var googlejs = {
 				//already logged in
 				callback()
 			} 
-			else if(result.error_subtype === "access_denied"){
+			else if(window.location.href.indexOf("?no=true") === -1 && (result.error_subtype === "access_denied" || result.error === "immediate_failed")){
 				//not yet, and must be a redirect
 				if(redirect === true){
 					//change window.location
@@ -59,12 +60,17 @@ var googlejs = {
 	
 	loadDrive: function(callback){
 		gapi.client.load('drive', 'v2', function(){
+			googlejs.load = true;
 			var temp = googlejs.getInfo(function(data){});
 			callback();
 		});
 	},
 	
 	getInfo: function(callback){
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
+	
 		var request = gapi.client.drive.about.get();
 		request.execute(function(resp) {
         	googlejs.rootFolderId = resp.rootFolderId;
@@ -93,6 +99,9 @@ var googlejs = {
 	},
 	
 	pickFile: function(callback){
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
 	
 		googlejs.purge();
 	
@@ -125,6 +134,9 @@ var googlejs = {
 	},
 	
 	pickFolder: function(callback){
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
 	
 		googlejs.purge();
 	
@@ -152,6 +164,9 @@ var googlejs = {
 	},
 	
 	upload: function(callback){
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
 	
 		googlejs.purge();
 	
@@ -177,6 +192,10 @@ var googlejs = {
 	},
 	
 	showShare: function(file){
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
+	
 		googlejs.purge();
 		gapi.load('drive-share', function() {
 		    var s = new gapi.drive.share.ShareClient(googlejs.appId);
@@ -198,6 +217,10 @@ var googlejs = {
 	},
 	
 	getPermissions: function(file, callback){
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
+	
 		var request = gapi.client.drive.permissions.list({
 			'fileId': file
 		});
@@ -207,6 +230,10 @@ var googlejs = {
 	},
 	
 	getContent: function(file, callback){
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
+	
 	    gapi.client.request({'path': '/drive/v2/files/'+file,'method': 'GET',callback: function ( theResponseJS, theResponseTXT ) {
 	        var myToken = gapi.auth.getToken();
 			var myXHR   = new XMLHttpRequest();
@@ -227,6 +254,10 @@ var googlejs = {
 	},
 	
 	save: function(file, callback, content){
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
+	
 		var contentArray = new Array(content.length);
 		for (var i = 0; i < contentArray.length; i++) {
 	    	contentArray[i] = content.charCodeAt(i);
@@ -282,6 +313,10 @@ var googlejs = {
 	},
 	
 	getTitle: function(file, callback){
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
+	
 		var request = gapi.client.drive.files.get({
 	    'fileId': file
 	  	});
@@ -293,21 +328,33 @@ var googlejs = {
 	},
 	
 	rename: function (file, callback, title) {
-	  var body = {'title': title};
-	  var request = gapi.client.drive.files.patch({
-	    'fileId': file,
-	    'resource': body
-	  });
-	  request.execute(function(resp) {
-	  	callback();
-	  });
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
+	
+		var body = {'title': title};
+		var request = gapi.client.drive.files.patch({
+		  'fileId': file,
+		  'resource': body
+		});
+		request.execute(function(resp) {
+			callback();
+		});
 	},
 	
 	refreshToken: function(){
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
+	
 		gapi.auth.authorize({'client_id': googlejs.clientId, 'scope': googlejs.scopes.join(' '), 'immediate':true},function(result){});
 	},
 	
 	getParents: function(file, callback) {
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
+	
 	  var request = gapi.client.drive.parents.list({
 	    'fileId': file
 	  });
@@ -317,6 +364,9 @@ var googlejs = {
 	},
 	
 	getFile: function(file, callback){
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}	
 		var request = gapi.client.drive.files.get({
 		   'fileId': file
 		});
@@ -326,6 +376,9 @@ var googlejs = {
 	},
 	
 	getAllFiles: function(callback) {
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
 	  var retrievePageOfFiles = function(request, result) {
 	    request.execute(function(resp) {
 	      result = result.concat(resp.items);
@@ -345,6 +398,9 @@ var googlejs = {
 	},
 	
 	getFileInFolder: function(folderId, callback) {
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
 	  var retrievePageOfChildren = function(request, result) {
 	    request.execute(function(resp) {
 	      result = result.concat(resp.items);
@@ -384,6 +440,9 @@ var googlejs = {
 	},
 	
 	fileIntoFolder: function(folderId, fileId, callback) {
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
 	  var body = {'id': folderId};
 	  var request = gapi.client.drive.parents.insert({
 	    'fileId': fileId,
@@ -395,6 +454,9 @@ var googlejs = {
 	},
 	
 	fileFromFolder: function(folderId, fileId, callback) {
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
 	  var request = gapi.client.drive.parents.delete({
 	    'parentId': folderId,
 	    'fileId': fileId
@@ -405,6 +467,10 @@ var googlejs = {
 	},
 	
 	insertFile: function(folderId, title, callback){
+		if(googlejs.load === false){
+			throw "You didn't load Google Drive! Use googlejs.loadDrive(callback)";
+		}
+	
 		var content = ""; //default text
 		
 		var contentArray = new Array(content.length); //convert it!

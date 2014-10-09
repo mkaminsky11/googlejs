@@ -6,8 +6,9 @@ function loadDrive(){
 	googlejs.developerKey = 'AIzaSyBTSFIgQkLly9v6Xuqc2Nqm-vX0jpyEbZk';
 	
 	googlejs.isLoggedIn(function(res,err){
+		console.log(res);
 		if(res === false){
-			googlejs.login(true, function(){
+			googlejs.login(false, function(){
 				
 				googlejs.loadDrive(function(){
 					googlejs.getInfo(function(res){

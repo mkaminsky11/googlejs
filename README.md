@@ -16,7 +16,49 @@ You need:
 + the app id
 + the developer key
 
-You also need to add the Google Drive API and Google Drive SDK through the developer console, and to set the javascript origin and redirect urls based on the url you want to use **googlejs** from. For more information, go [here](https://developers.google.com/drive/web/enable-sdk). 
+First, go to the [Google Cloud console](https://console.developers.google.com/project).
+
+![](images/console_main.png)
+
+Create a new project and name it something (I'm using <b>testing</b>).
+
+![](images/name.png)
+
+Next, add the Google Drive APIs
+
+![](images/add_apis.png)
+
+Then, create a new client id
+
+![](images/creds.png)
+
+For the type, select <b>web application</b>. Set the origin to the domain of the server you are going to be authorizing from. The redirect url is where the user will be redirected once her or she is authorized.
+
+![](images/type.png)
+
+Now, you'll be able to get the client id. <b>SAVE THIS</b>, you'll need it later.
+
+![](images/client_id.png)
+
+Next, create a public key.
+
+![](images/public.png)
+
+Make it a server key
+
+![](images/server_key.png)
+
+Don't type anything here
+
+![](images/ips.png)
+
+You should be able to see your api key. <b>SAVE THIS</b>, you'll need it later.
+
+![](images/api_key.png)
+
+You can also get your app id. <b>SAVE THIS</b>, you'll need it later.
+
+![](images/app_id.png)
 
 For example,
 
@@ -62,6 +104,7 @@ googlejs.login(true, function(){
 	//the user will be redirected via window.location.href
 },"https://example/blahblahblah");
 ```
+![](images/with.gif)
 
 The other way creates a popup that authorizes the user.
 
@@ -70,6 +113,8 @@ googlejs.login(false, function(){
 	
 },"");
 ```
+
+![](images/without.gif)
 
 ###Loading Drive###
 ```javascript
@@ -86,6 +131,53 @@ Knowing information such as the email and storage space of a user is important. 
 ```javascript
 googlejs.getInfo(function(res){
 	console.log(res);
+});
+```
+
+
+###Picking Files/Folders###
+Once Google Drive is loaded using the `googlejs.loadDrive()` method, you can pick a file or folder. The information about the picked objects is returned via the callback.
+
+![](images/file_picker.png)
+
+For a file:
+```javascript
+googlejs.pickFile(function(data){
+	console.log(data);
+});
+```
+
+For a folder:
+```javascript
+googlejs.pickFolder(function(data){
+	console.log(data);
+});
+```
+
+The most important piece of information that the callback will give you is the id of the selected object. This can be found by looking through the returned object.
+
+###Uploading a File###
+The file will be uploaded to the folder selected by the user, and the object, including the id of the new file, will be returned.
+
+```javascript
+googlejs.upload(function(data){
+	console.log(data);
+});
+```
+
+###Sharing a File###
+Once you have the id of a file, you can use it to show the share dialog.
+
+![](images/share_dialog.png)
+
+```javascript
+googlejs.showShare("0ACWSHHBN-zyoUk9PVA");
+```
+
+If you want to manually get the sharing permissions for a file:
+```javascript
+googlejs.getPermissions("0ACWSHHBN-zyoUk9PVA", function(data){
+	console.log(data);
 });
 ```
 
