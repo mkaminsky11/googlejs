@@ -61,9 +61,11 @@ There are two ways to log the user in. One is to redirect the user to a specific
 googlejs.login(true, function(){
 	//the user will be redirected via window.location.href
 },"https://example/blahblahblah");
+```
 
 The other way creates a popup that authorizes the user.
 
+```javascript
 googlejs.login(false, function(){
 	
 },"");
