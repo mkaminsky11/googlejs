@@ -9,58 +9,13 @@ Google APIs made easy
 <script src="googlejs.js"></script>
 ```
 
-You also need to get some information from the Google Developer Console. You will be able to access this information [here](https://console.developers.google.com/project).
+> NOTE: you MUST DO THE FOLLOWING STEPS!
+> otherwise, it won't work!
 
-You need:
-+ the client id
-+ the app id
-+ the developer key
+You'll neeed to [get started](get_started.md) with the Google API.
 
-First, go to the [Google Cloud console](https://console.developers.google.com/project).
-
-![](images/console_main.png)
-
-Create a new project and name it something (I'm using <b>testing</b>).
-
-![](images/name.png)
-
-Next, add the Google Drive APIs
-
-![](images/add_apis.png)
-
-Then, create a new client id
-
-![](images/creds.png)
-
-For the type, select <b>web application</b>. Set the origin to the domain of the server you are going to be authorizing from. The redirect url is where the user will be redirected once her or she is authorized.
-
-![](images/type.png)
-
-Now, you'll be able to get the client id. <b>SAVE THIS</b>, you'll need it later.
-
-![](images/client_id.png)
-
-Next, create a public key.
-
-![](images/public.png)
-
-Make it a server key
-
-![](images/server_key.png)
-
-Don't type anything here
-
-![](images/ips.png)
-
-You should be able to see your api key. <b>SAVE THIS</b>, you'll need it later.
-
-![](images/api_key.png)
-
-You can also get your app id. <b>SAVE THIS</b>, you'll need it later.
-
-![](images/app_id.png)
-
-For example,
+###Things to Know###
+By default, the function `loadDrive()` will be called. This is a good place to set the information that you got earlier
 
 ```javascript
 function loadDrive(){
@@ -72,7 +27,6 @@ function loadDrive(){
 }
 ```
 
-###Things to Know###
 Each Google Drive file, folder, and user has a unique id. You can find the id of a file or folder by using the `pickFile()` or `pickerFolder()` methods. These will return an object, which can be parsed for the id.
 
 Each user also has a root folder (the highest level folder in your Google Drive file tree). This is stored under `googlejs.rootFolderId` once the `googlejs.loadDrive()` method is called and executed.
