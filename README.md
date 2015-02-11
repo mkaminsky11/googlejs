@@ -135,6 +135,31 @@ googlejs.getPermissions("0ACWSHHBN-zyoUk9PVA", function(data){
 });
 ```
 
+###Purging###
+Sometimes, a translucent `<div>` will be left over from the the sharing, uploading, and opening dialogs. These should be cleared by default, but if you don't, use this.
+
+```javascript
+googlejs.purge();
+```
+
+###Content###
+To get the raw text content of a file
+
+```javascript
+googlejs.content("0ACWSHHBN-zyoUk9PVA", function(code){
+	console.log(code);
+});
+```
+
+###Saving###
+To update the file and save it
+
+```javascript
+googlejs.save("0ACWSHHBN-zyoUk9PVA", function(){
+	console.log("saved!");
+}, "this is the new text");
+```
+
 **Todo**
 + token refresh (done)
 + Google Drive
