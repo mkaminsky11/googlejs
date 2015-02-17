@@ -24,7 +24,7 @@ Then, create a new client id
 
 ![](images/creds.png)
 
-For the type, select <b>web application</b>. Set the origin to the domain of the server you are going to be authorizing from. The redirect url is where the user will be redirected once her or she is authorized.
+For the type, select <b>web application</b>. Set the origin to the domain of the server you are going to be authorizing from. The redirect url is where the user will be redirected once he or she is authorized.
 
 ![](images/type.png)
 
