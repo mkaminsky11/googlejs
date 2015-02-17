@@ -136,7 +136,7 @@ googlejs.getPermissions("0ACWSHHBN-zyoUk9PVA", function(data){
 ```
 
 ###Purging###
-Sometimes, a translucent `<div>` will be left over from the the sharing, uploading, and opening dialogs. These should be cleared by default, but if you don't, use this.
+Sometimes, a translucent `<div>` will be left over from the the sharing, uploading, and opening dialogs. These should be cleared by default, but if id didn't, use this.
 
 ```javascript
 googlejs.purge();
